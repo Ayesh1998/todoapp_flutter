@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todoapp_flutter/helpers/drawerNavigator.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: Text('Todo List'),
       ),
+      drawer: DrawerNavigator(),
     );
   }
 }
