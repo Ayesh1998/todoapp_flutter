@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:todoapp_flutter/models/category.dart';
 import 'package:todoapp_flutter/screens/homeScreen.dart';
+import 'package:todoapp_flutter/services/categoryService.dart';
 
 class Categories extends StatefulWidget {
   @override
@@ -7,6 +9,12 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
+  var _categoryNameController = TextEditingController();
+  var _categoryDescriptionController = TextEditingController();
+
+  var _category = Category();
+  var _categoryService = CategoryService();
+
   _showFormDialog(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -18,6 +26,7 @@ class _CategoriesState extends State<Categories> {
             child: Column(
               children: <Widget>[
                 TextField(
+                  controller: _categoryDescriptionController,
                   decoration: InputDecoration(
                     hintText: 'Enter Category',
                     labelText: 'Category',
@@ -31,6 +40,7 @@ class _CategoriesState extends State<Categories> {
                   ),
                 ),
                 TextField(
+                  controller: _categoryNameController,
                   decoration: InputDecoration(
                     hintText: 'Enter Description',
                     labelText: 'Description',
@@ -48,8 +58,22 @@ class _CategoriesState extends State<Categories> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('buttonText'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red),
+              ),
               onPressed: () {
+                Navigator.of(param).pop(); // Dismiss alert dialog
+              },
+            ),
+            TextButton(
+              child: Text('Save'),
+              onPressed: () async {
+                _category.name = _categoryNameController.text;
+                _category.description = _categoryDescriptionController.text;
+                _category.id = 1;
+                var result = await _categoryService.saveCategory(_category);
+                print(result);
                 Navigator.of(param).pop(); // Dismiss alert dialog
               },
             ),
