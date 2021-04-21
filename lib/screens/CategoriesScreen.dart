@@ -15,6 +15,25 @@ class _CategoriesState extends State<Categories> {
   var _category = Category();
   var _categoryService = CategoryService();
 
+  List<Category> _categoryList = List<Category>();
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getAllCategories();
+  // }
+
+  getAllCategories() async {
+    var categories = await _categoryService.readCategories();
+    categories.forEach((category) {
+      var categoryModel = Category();
+      categoryModel.id = category['id'];
+      categoryModel.description = category['description'];
+      categoryModel.name = category['name'];
+      _categoryList.add(categoryModel);
+    });
+  }
+
   _showFormDialog(BuildContext context) {
     return showDialog<void>(
       context: context,
@@ -71,7 +90,7 @@ class _CategoriesState extends State<Categories> {
               onPressed: () async {
                 _category.name = _categoryNameController.text;
                 _category.description = _categoryDescriptionController.text;
-                _category.id = 1;
+                // _category.id = 1;
                 var result = await _categoryService.saveCategory(_category);
                 print(result);
                 Navigator.of(param).pop(); // Dismiss alert dialog
@@ -97,7 +116,28 @@ class _CategoriesState extends State<Categories> {
         ),
         title: Text('Categories'),
       ),
-      body: Center(child: Text('Welcome to categories')),
+      body: ListView.builder(
+          itemCount: _categoryList.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                leading: IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {},
+                ),
+                title: Row(
+                  children: <Widget>[
+                    Text(_categoryList[index].name),
+                    IconButton(
+                      onPressed: () {},
+                      color: Colors.red,
+                      icon: Icon(Icons.delete),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showFormDialog(context);

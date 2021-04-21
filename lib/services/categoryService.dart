@@ -7,8 +7,10 @@ class CategoryService {
     _repository = Repository();
   }
   saveCategory(Category category) async {
-    print(category.name);
-    print(category.description);
     return await _repository.insertData('categories', category.categoryMap());
+  }
+
+  readCategories() async {
+    return await _repository.readData('categories');
   }
 }
